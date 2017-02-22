@@ -7,6 +7,14 @@ using System.Threading.Tasks;
 
 namespace FileWatcher.Model
 {
+    /// <summary>
+    /// Wrapper for Listbox
+    /// wpf doesnt support checklistbox so for every elemt which wants to be in
+    /// the lsitbox it has to be wrapped with a checkbox 
+    /// allows me to get a list with extensions and select  some of them
+    /// for a better UI feeling
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class CheckWrapper<T> : BaseNotifyPropertyChanged
     {
         #region Constructor
