@@ -9,6 +9,11 @@ using System.Windows.Data;
 
 namespace FileWatcher.Model
 {
+    /// <summary>
+    /// additional content needed for checklistbox 
+    /// see checkwrapper for more information
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class CheckableObservableCollection<T> : ObservableCollection<CheckWrapper<T>>
     {
         #region Fields

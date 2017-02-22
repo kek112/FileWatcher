@@ -399,16 +399,10 @@ namespace FileWatcher.Model
 
         #region Handler
 
-        //void test()
-        //{
-        //    SourceFilePath = @"D:\Development\TestSorcueFile";
-        //    TargetFilePath = @"D:\Development\TestSorcueFile";
-        //    StatusBarMode(true);
-        //    //CheckExtensionsInFolder();
-            
-        //    RunFolder();
-        //}
-
+        /// <summary>
+        /// set Image to an UI Element
+        /// </summary>
+        /// <param name="ImgName"></param>
         void showImage(string ImgName)
         {
                if(!string.IsNullOrEmpty(ImgName))
@@ -423,6 +417,11 @@ namespace FileWatcher.Model
             }
         }
 
+        /// <summary>
+        /// scans the folder for all the extensions 
+        /// saves entered URL
+        /// 
+        /// </summary>
         private void RunFolder() 
         {
             DirectoryInfo di = new DirectoryInfo(@SourceFilePath);
@@ -438,7 +437,11 @@ namespace FileWatcher.Model
             SaveUrlToXml();
         }
 
-
+        /// <summary>
+        /// start the filewatcher and activate the eventhandler
+        /// reacts to new/changed files
+        /// set green image
+        /// </summary>
         public void Watch()
         {
             if (Directory.Exists(SourceFilePath) && Directory.Exists(TargetFilePath))
@@ -467,6 +470,14 @@ namespace FileWatcher.Model
             }            
         }
 
+        /// <summary>
+        /// creates directories from the checked extensions 
+        /// sorts all the files to the folders
+        /// files with same names will be overridden
+        /// files be copied and moved 
+        /// copied to the target subfolder 
+        /// moved to source processed 
+        /// </summary>
         private void InitialSort()
         {
 
@@ -521,6 +532,10 @@ namespace FileWatcher.Model
             }
         }
 
+        /// <summary>
+        /// deactivate the watcher settings
+        /// set red image 
+        /// </summary>
         private void Unwatch()
         {
             if (watcher != null)
@@ -537,6 +552,10 @@ namespace FileWatcher.Model
            
         }
 
+        /// <summary>
+        /// get several information from source/target folder to display them
+        /// name and size atm
+        /// </summary>
         void SetFolderInformation()
         {
             InformationContent = "";
@@ -577,6 +596,11 @@ namespace FileWatcher.Model
             // read folder and set InfromationContent
         }
 
+        /// <summary>
+        /// eventhandler for changed directory
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         private void OnWeightFilesDirectoryChanged(object source, FileSystemEventArgs e)
         {
             //checked extension --> check the new file and if match copy to folder if not do nothjing
@@ -591,6 +615,11 @@ namespace FileWatcher.Model
 
         }
 
+        /// <summary>
+        /// check all the existing files in folder an get the extensions from them to put them in a list
+        /// </summary>
+        /// <param name="di"></param>
+        /// <returns></returns>
         private List<string> CheckExtensionsInFolder(DirectoryInfo di) 
         { 
             List<string> extensionList = new List<string>();   
@@ -603,6 +632,10 @@ namespace FileWatcher.Model
            
         }
 
+        /// <summary>
+        /// changes the Statusbarmode if Filewatcher active/inactive
+        /// </summary>
+        /// <param name="p"></param>
         private void StatusBarMode(bool p)
         {
             if (p)
@@ -615,37 +648,15 @@ namespace FileWatcher.Model
             }
         }
 
+        /// <summary>
+        /// as name says removes double entries from list
+        /// </summary>
+        /// <param name="stringList"></param>
+        /// <returns></returns>
         private static List<string> removeDoubleEntries(List<string> stringList)
         {
             return (new HashSet<string>(stringList)).ToList();
         }
-
-        private bool IsFileLocked(FileInfo file)
-        {
-            FileStream stream = null;
-
-            try
-            {
-                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
-            }
-            catch (IOException)
-            {
-                //the file is unavailable because it is:
-                //still being written to
-                //or being processed by another thread
-                //or does not exist (has already been processed)
-                return true;
-            }
-            finally
-            {
-                if (stream != null)
-                    stream.Close();
-            }
-
-            //file is not locked
-            return false;
-        }
-
 
         /// <summary>
         /// Create a Settings xml file to save the entered URL to load them with the start of the program
@@ -681,6 +692,7 @@ namespace FileWatcher.Model
 
 
         }
+
         /// <summary>
         /// Loads the SettingsXML to get the URL for the Watcher
         /// </summary>
