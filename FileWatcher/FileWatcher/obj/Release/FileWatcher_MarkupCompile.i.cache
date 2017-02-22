@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Development\FileWatcher\FileWatcher\obj\Release\
+D:\Development\Git\Filewatcher\FileWatcher\FileWatcher\obj\Release\
 FileWatcher
 none
 false
 TRACE
-D:\Development\FileWatcher\FileWatcher\App.xaml
+D:\Development\Git\Filewatcher\FileWatcher\FileWatcher\App.xaml
 11151548125
 
 151137072027
 12-1401562060
 MainWindow.xaml;
 
-False
+True
 

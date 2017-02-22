@@ -16,3 +16,6 @@ D:\Development\FileWatcher\FileWatcher\obj\Release\FileWatcher.application
 D:\Development\FileWatcher\FileWatcher\obj\Release\FileWatcher.exe
 D:\Development\FileWatcher\FileWatcher\obj\Release\FileWatcher.pdb
 D:\Development\FileWatcher\FileWatcher\obj\Release\FileWatcher.csprojResolveAssemblyReference.cache
+D:\Development\Git\Filewatcher\FileWatcher\FileWatcher\bin\Release\FileWatcher.exe.config
+D:\Development\Git\Filewatcher\FileWatcher\FileWatcher\obj\Release\FileWatcher.exe
+D:\Development\Git\Filewatcher\FileWatcher\FileWatcher\obj\Release\FileWatcher.pdb
