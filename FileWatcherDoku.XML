@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FileWatcher</name>
+    </assembly>
+    <members>
+        <member name="T:FileWatcher.Model.CheckWrapper`1">
+            <summary>
+            Wrapper for Listbox
+            wpf doesnt support checklistbox so for every elemt which wants to be in
+            the lsitbox it has to be wrapped with a checkbox 
+            allows me to get a list with extensions and select  some of them
+            for a better UI feeling
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:FileWatcher.Model.CheckableObservableCollection`1">
+            <summary>
+            additional content needed for checklistbox 
+            see checkwrapper for more information
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:FileWatcher.Model.CheckableObservableCollection`1.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:FileWatcher.Model.CheckableObservableCollection`1.Add(`0)">
+            <summary>
+            Function to add element to the checkable list
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:FileWatcher.Model.CheckableObservableCollection`1.Refresh">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:FileWatcher.App">
+            <summary>
+            Interaktionslogik für "App.xaml"
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:FileWatcher.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:FileWatcher.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:FileWatcher.MainWindow">
+            <summary>
+             Interaction for MainModel
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:FileWatcher.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:FileWatcher.Model.MainModel.showImage(System.String)">
+            <summary>
+            set Image to an UI Element
+            element has to be in the Images folder and has to be jpg
+            function just needs the name not the extension
+            </summary>
+            <param name="ImgName"></param>
+        </member>
+        <member name="M:FileWatcher.Model.MainModel.RunFolder">
+            <summary>
+            scans the folder for all the extensions 
+            calls the remove double entries
+            add the extension to the Listbox
+            saves entered URL
+            
+            </summary>
+        </member>
+        <member name="M:FileWatcher.Model.MainModel.Watch">
+            <summary>
+            start the filewatcher and activate the eventhandler
+            reacts to new/changed files
+            set one watcher for files and directories 
+            so i can distinguish between a change in a folder or file
+            is needed because ignore subdirectories isnt handling this kind of change
+            set green image
+            </summary>
+        </member>
+        <member name="M:FileWatcher.Model.MainModel.InitialSort">
+            <summary>
+            creates directories from the checked extensions 
+            sorts all the files to the folders
+            files with same names will be overridden
+            files be copied and moved 
+            copied to the target subfolder 
+            moved to source processed 
+            </summary>
+        </member>
+        <member name="M:FileWatcher.Model.MainModel.Unwatch">
+            <summary>
+            deactivate the watcher settings
+            set red image 
+            </summary>
+        </member>
+        <member name="M:FileWatcher.Model.MainModel.SetFolderInformation">
+            <summary>
+            get several information from source/target folder to display them
+            name and size atm
+            </summary>
+        </member>
+        <member name="M:FileWatcher.Model.MainModel.OnWeightFilesDirectoryChanged(System.Object,System.IO.FileSystemEventArgs)">
+            <summary>
+            eventhandler for changed directory
+            </summary>
+            <param name="source"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:FileWatcher.Model.MainModel.CheckExtensionsInFolder(System.IO.DirectoryInfo)">
+            <summary>
+            check all the existing files in folder an get the extensions from them to put them in a list
+            </summary>
+            <param name="di"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FileWatcher.Model.MainModel.StatusBarMode(System.Boolean)">
+            <summary>
+            changes the Statusbarmode if Filewatcher active/inactive
+            </summary>
+            <param name="p"></param>
+        </member>
+        <member name="M:FileWatcher.Model.MainModel.removeDoubleEntries(System.Collections.Generic.List{System.String})">
+            <summary>
+            as name says removes double entries from list
+            </summary>
+            <param name="stringList"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FileWatcher.Model.MainModel.SaveUrlToXml">
+            <summary>
+            Create a Settings xml file to save the entered URL to load them with the start of the program
+            </summary>
+        </member>
+        <member name="M:FileWatcher.Model.MainModel.LoadXML">
+            <summary>
+            Loads the SettingsXML to get the URL for the Watcher
+            </summary>
+        </member>
+        <member name="T:FileWatcher.Properties.Resources">
+            <summary>
+              Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
+            </summary>
+        </member>
+        <member name="P:FileWatcher.Properties.Resources.ResourceManager">
+            <summary>
+              Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
+            </summary>
+        </member>
+        <member name="P:FileWatcher.Properties.Resources.Culture">
+            <summary>
+              Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
+              Ressourcenlookups, die diese stark typisierte Ressourcenklasse verwenden.
+            </summary>
+        </member>
+    </members>
+</doc>
