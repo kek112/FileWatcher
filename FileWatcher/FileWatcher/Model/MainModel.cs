@@ -30,7 +30,8 @@ namespace FileWatcher.Model
         private int selectedListBoxItemIndex;
         private bool elementActive;
         private List<string> bottomList;
-   
+        private List<string> CheckedExtensions = new List<string>();
+
         private CheckableObservableCollection<string> items;
         private RelayCommand scanFolderCommand;
         private RelayCommand setSourceFilePathCommand;
@@ -40,7 +41,8 @@ namespace FileWatcher.Model
         private RelayCommand addExtraExtensionCommand;
         private RelayCommand removeExtensionCommand;
 
-        private FileSystemWatcher watcher;
+        private FileSystemWatcher _FileWatcher;
+        private FileSystemWatcher _DireWatcher;
         private bool running;
         
         #endregion Fields
@@ -401,6 +403,8 @@ namespace FileWatcher.Model
 
         /// <summary>
         /// set Image to an UI Element
+        /// element has to be in the Images folder and has to be jpg
+        /// function just needs the name not the extension
         /// </summary>
         /// <param name="ImgName"></param>
         void showImage(string ImgName)
@@ -419,6 +423,8 @@ namespace FileWatcher.Model
 
         /// <summary>
         /// scans the folder for all the extensions 
+        /// calls the remove double entries
+        /// add the extension to the Listbox
         /// saves entered URL
         /// 
         /// </summary>
@@ -429,7 +435,7 @@ namespace FileWatcher.Model
             extensionList = removeDoubleEntries(extensionList);
             Items.Clear();
 
-            //Add the extension to the Listbox
+            
             foreach(string str in extensionList)
             {
                 Items.Add(str);
@@ -440,31 +446,47 @@ namespace FileWatcher.Model
         /// <summary>
         /// start the filewatcher and activate the eventhandler
         /// reacts to new/changed files
+        /// set one watcher for files and directories 
+        /// so i can distinguish between a change in a folder or file
+        /// is needed because ignore subdirectories isnt handling this kind of change
         /// set green image
         /// </summary>
         public void Watch()
         {
             if (Directory.Exists(SourceFilePath) && Directory.Exists(TargetFilePath))
             {
+                InitialSort();
 
-                watcher = new FileSystemWatcher();
+                _FileWatcher = new FileSystemWatcher();
 
-                watcher.Path = SourceFilePath;
+                _FileWatcher.Path = SourceFilePath;
 
-                watcher.NotifyFilter = NotifyFilters.LastWrite;
-                watcher.IncludeSubdirectories = false;
+                _FileWatcher.NotifyFilter = NotifyFilters.FileName;
+                _FileWatcher.IncludeSubdirectories = false;
 
-                watcher.Changed += OnWeightFilesDirectoryChanged;
-                watcher.Created += OnWeightFilesDirectoryChanged;
+                _FileWatcher.Changed += OnWeightFilesDirectoryChanged;
+                _FileWatcher.Created += OnWeightFilesDirectoryChanged;
 
-                watcher.EnableRaisingEvents = true;
+                _FileWatcher.EnableRaisingEvents = true;
+
+                _DireWatcher = new FileSystemWatcher();
+
+                _DireWatcher.Path = SourceFilePath;
+
+                _DireWatcher.NotifyFilter = NotifyFilters.DirectoryName;
+                _DireWatcher.IncludeSubdirectories = false;
+
+                _DireWatcher.Changed += OnWeightFilesDirectoryChanged;
+                _DireWatcher.Created += OnWeightFilesDirectoryChanged;
+
+                _DireWatcher.EnableRaisingEvents = true;
 
                 StatusBarMode(true);
                 showImage("Green");
 
                 ElementActive = false;
 
-                InitialSort();
+                
                 //BottomList.Add( "Watcher started");
                 
             }            
@@ -481,7 +503,6 @@ namespace FileWatcher.Model
         private void InitialSort()
         {
 
-            List<string> CheckedExtensions = new List<string>();
             foreach(var Item in Items)
             {
                 if (Item.IsChecked) 
@@ -505,11 +526,11 @@ namespace FileWatcher.Model
                     if (file.Extension == "."+extensions) 
                     {
                         // set preferences for overwrite
-                        string target = @TargetFilePath + "/" + extensions +"/"+ file.Name;
+                        string target = @TargetFilePath + "\\" + extensions +"\\"+ file.Name;
                        
                         try
                         {
-                            File.Copy(file.FullName.ToString(), target, true);
+                            File.Copy(file.FullName.ToString(), target,true);
                             
                         }
                         catch (Exception e) 
@@ -520,7 +541,7 @@ namespace FileWatcher.Model
                         try
                         {
                             //File.MoveTo(@TargetFilePath + "/Processed/" + file.Name);
-                            File.Move(file.FullName.ToString(),@SourceFilePath + "/Processed/" + file.Name);
+                            File.Move(file.FullName.ToString(),@SourceFilePath + "\\Processed\\" + file.Name);
                         }
                         catch (Exception e)
                         {
@@ -538,12 +559,18 @@ namespace FileWatcher.Model
         /// </summary>
         private void Unwatch()
         {
-            if (watcher != null)
+            if (_FileWatcher != null)
             {
-                watcher.Changed -= OnWeightFilesDirectoryChanged;
-                watcher.Created -= OnWeightFilesDirectoryChanged;
+                _FileWatcher.Changed -= OnWeightFilesDirectoryChanged;
+                _FileWatcher.Created -= OnWeightFilesDirectoryChanged;
 
-                watcher.EnableRaisingEvents = false;
+                _FileWatcher.EnableRaisingEvents = false;
+
+                _DireWatcher.Changed -= OnWeightFilesDirectoryChanged;
+                _DireWatcher.Created -= OnWeightFilesDirectoryChanged;
+
+                _DireWatcher.EnableRaisingEvents = false;
+
                 StatusBarMode(false);
                 ElementActive = true;
                 showImage("Red");
@@ -603,15 +630,41 @@ namespace FileWatcher.Model
         /// <param name="e"></param>
         private void OnWeightFilesDirectoryChanged(object source, FileSystemEventArgs e)
         {
-            //checked extension --> check the new file and if match copy to folder if not do nothjing
+            Char splitchar = '.';
+            string Fileextension = e.Name.Split(splitchar).Last();
+            if (source == _FileWatcher)
+            {
+                foreach (var extension in CheckedExtensions)
+                {
+                    if (Fileextension == extension)
+                    {
+                        string target = @TargetFilePath + "\\" + extension + "\\" + e.Name;
 
-            //check if file is completly written
-            //problem: file to large --> smaller incoming files are processed later
-            //while (!IsFileLocked(new FileInfo(e.FullPath)))
-            //{
-            //    InitialSort();
-            //}
-            InitialSort();
+                        try
+                        {
+                            File.Copy(e.FullPath, target, true);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+
+                        try
+                        {
+                            File.Move(e.FullPath, @SourceFilePath + "\\Processed\\" + e.Name);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                    }
+                }
+            }
+            else 
+            {
+                //FOLDER was changed
+            }
+            
 
         }
 
